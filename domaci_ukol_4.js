@@ -217,13 +217,13 @@ const getEmployeeStatistics = (listOfEmployees) => {
     arrayOfWorkloads.push(element.workload);
     arrayOfWorkloads.sort((a, b) => a - b);
     const middleIndexOfWorkloads = Math.floor(arrayOfAges.length / 2);
-    if (arrayOfAges % 2 === 0) {
+    if (arrayOfWorkloads % 2 === 0) {
       medianOfWorkloads =
-        (arrayOfAges[middleIndexOfWorkloads - 1] +
-          arrayOfAges[middleIndexOfWorkloads]) /
+        (arrayOfWorkloads[middleIndexOfWorkloads - 1] +
+            arrayOfWorkloads[middleIndexOfWorkloads]) /
         2;
     } else {
-      medianOfWorkloads = arrayOfAges[middleIndexOfWorkloads];
+      medianOfWorkloads = arrayOfWorkloads[middleIndexOfWorkloads];
     }
     if (element.gender === "female") {
       sumOfWomenWorkloads += element.workload;
