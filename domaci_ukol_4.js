@@ -2,7 +2,7 @@ const dtoIn = {
   count: 50,
   age: {
     min: 19,
-    max: 35,
+    max: 40,
   },
 };
 
@@ -173,16 +173,22 @@ const getEmployeeStatistics = (listOfEmployees) => {
   let workload20 = 0;
   let workload30 = 0;
   let workload40 = 0;
-  function calculateAge() {
-    const curentDate = new Date();
-    let sumOfAge = 0;
-    for (let element of listOfEmployeesArray) {
-      const birthDate = new Date(element.birthdate);
-      sumOfAge += curentDate.getFullYear() - birthDate.getFullYear();
-    }
-    return sumOfAge / listOfEmployeesArray.length;
-  }
+  let averageAge = 0;
+  let medianOfAges = 0;
+  let medianOfWorkloads = 0;
+  const curentDate = new Date();
+  let sumOfAge = 0;
+  let minimalAge = Infinity;
+  let maximalAge = 0;
+  let arrayOfAges = [];
+  let arrayOfWorkloads = [];
+  let averageWomenWorkload = 0;
+  let sumOfWomenWorkloads = 0;
+  let countOfWomenWorkloads = 0;
   for (let element of listOfEmployeesArray) {
+    const birthDate = new Date(element.birthdate);
+    sumOfAge += curentDate.getFullYear() - birthDate.getFullYear();
+    averageAge = sumOfAge / listOfEmployeesArray.length;
     if (element.workload === 10) {
       workload10++;
     } else if (element.workload === 20) {
@@ -192,6 +198,38 @@ const getEmployeeStatistics = (listOfEmployees) => {
     } else {
       workload40++;
     }
+    const age = new Date().getFullYear() - birthDate.getFullYear();
+    if (age < minimalAge) {
+      minimalAge = age;
+    } else if (age > maximalAge) {
+      maximalAge = age;
+    }
+    arrayOfAges.push(age);
+    arrayOfAges.sort((a, b) => a - b);
+    const middleIndexOfAges = Math.floor(arrayOfAges.length / 2);
+    if (arrayOfAges % 2 === 0) {
+      medianOfAges =
+        (arrayOfAges[middleIndexOfAges - 1] + arrayOfAges[middleIndexOfAges]) /
+        2;
+    } else {
+      medianOfAges = arrayOfAges[middleIndexOfAges];
+    }
+    arrayOfWorkloads.push(element.workload);
+    arrayOfWorkloads.sort((a, b) => a - b);
+    const middleIndexOfWorkloads = Math.floor(arrayOfAges.length / 2);
+    if (arrayOfAges % 2 === 0) {
+      medianOfWorkloads =
+        (arrayOfAges[middleIndexOfWorkloads - 1] +
+          arrayOfAges[middleIndexOfWorkloads]) /
+        2;
+    } else {
+      medianOfWorkloads = arrayOfAges[middleIndexOfWorkloads];
+    }
+    if (element.gender === "female") {
+      sumOfWomenWorkloads += element.workload;
+      countOfWomenWorkloads++;
+    }
+    averageWomenWorkload = sumOfWomenWorkloads / countOfWomenWorkloads;
   }
   const dtoOut = {
     total: dtoIn.count,
@@ -199,7 +237,12 @@ const getEmployeeStatistics = (listOfEmployees) => {
     workload20: workload20,
     workload30: workload30,
     workload40: workload40,
-    averageAge: calculateAge(),
+    averageAge: averageAge,
+    minAge: minimalAge,
+    maxAge: maximalAge,
+    medianAge: medianOfAges,
+    medianWorkload: medianOfWorkloads,
+    averageWomenWorkload: averageWomenWorkload,
     sortedByWorkload: listOfEmployeesArray.sort(
       (a, b) => a.workload - b.workload,
     ),
